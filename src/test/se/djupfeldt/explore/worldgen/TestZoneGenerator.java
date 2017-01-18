@@ -3,10 +3,8 @@ package se.djupfeldt.explore.worldgen;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import se.djupfeldt.explore.constants.ZoneTypes;
-import se.djupfeldt.explore.dto.Zone;
+import se.djupfeldt.explore.constants.RegionType;
+import se.djupfeldt.explore.dto.Region;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,35 +16,37 @@ import java.util.Random;
  */
 public class TestZoneGenerator {
 
-    ZoneGenerator generator;
+    RegionGenerator generator;
 
     @Before
     public void beforeTest() {
-        generator = new ZoneGenerator();
-        generator.zoneStore = mock(ZoneStore.class);
+        generator = new RegionGenerator();
+        generator.regionStore = mock(RegionStore.class);
     }
 
     @Test
     public void testGetZone() {
-        when(generator.zoneStore.getZone(0,0)).thenReturn(null);
-        Zone zone00 = generator.getZone(0,0,4);
+        when(generator.regionStore.getZone(0,0)).thenReturn(null);
+        Region zone00 = generator.getRegion(0,0,4);
         System.out.println(zone00);
     }
 
     @Test
     public void testGetZones() {
-        for (int x = 0; x < 50; x++) {
-            for (int y = 0; y < 50; y++) {
-                Zone zone = generator.getZone(x, y,4);
-                System.out.println(zone);
+        int rad = 5;
+        for (int x = rad; x > -rad; x--) {
+            for (int y = rad; y > -rad; y--) {
+                Region zone = generator.getRegion(x, y,2141234236);
+                System.out.print(zone.getType());
             }
+            System.out.println("");
         }
     }
 
     @Test
     public void testGetZoneType() {
         try {
-            ZoneTypes type = generator.getZoneType(5,7,342351254);
+            RegionType type = generator.getZoneType(1,1,23);
             System.out.println(type.name());
         } catch (IndexOutOfBoundsException e) {
             Assert.fail();
@@ -58,7 +58,7 @@ public class TestZoneGenerator {
         Random rnd = new Random();
         try {
             for (int i = 0; i < 50; i++) {
-                ZoneTypes type = generator.getZoneType(rnd.nextInt(10000), rnd.nextInt(10000), rnd.nextInt(50000));
+                RegionType type = generator.getZoneType(rnd.nextInt(10000), rnd.nextInt(10000), rnd.nextInt(50000));
                 System.out.println(type.name());
             }
         } catch (IndexOutOfBoundsException e) {
